@@ -1,0 +1,80 @@
+﻿@model IEnumerable<SurveyTool.Models.Survey>
+                     
+@{
+    ViewBag.Title = "Reports";
+}
+
+@section scripts{
+
+    <script src="~/Scripts/jsfile.js"></script>
+}
+
+
+<div class="page-header">
+    <h2>@ViewBag.Title</h2>
+</div>
+   
+<p>
+    @using (Html.BeginForm("Index", "Reports", FormMethod.Get,new{@class="form-horizontal"}))
+    {  
+        <b>Search By:</b>
+        <div class="form-group">
+            <input type="radio" name="SearchBy" value="Name" onclick="Nameformate();"><a href="#" style="padding-right:20%;">Name</a>
+            <input type="radio" name="SearchBy" value="Date" onclick="dateformate();"> <a href="#" style="">Date</a> 
+           
+        </div>
+        <br />
+        <div class="row">
+            <span>
+                <input type="text" name="search" id="search" style="width:88%" />
+                <input type="submit" id="btn_search" value="search" class="btn btn-success " style="float:right;" />
+            </span> 
+            <br />
+        </div>
+    }
+</p>
+
+ 
+                   
+
+<div class="container">
+        
+     @foreach (var survey in Model)
+    {
+        <table class="table-bordered table-hover table-striped">
+            <ul>
+                <li>
+                    <a href="@Url.Action("Details", new { id = survey.Id })"><b>@survey.Name</b></a>
+                </li>
+            </ul>
+        </table>
+    }
+
+
+     @if (Model.Count() == 0)
+     {
+         <table>
+             <tr>
+                 <th style="color:red;">NO survey with this criteria.....</th>  
+             </tr>
+         </table>
+     }
+     
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

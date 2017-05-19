@@ -1,0 +1,111 @@
+﻿@model SurveyTool.Models.Survey
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $('.datepicker').datepicker({format: 'mm/dd/yyyy'});
+
+            $(document).on('click', 'a[data-toggle=comment]', function() {
+                var id = $(this).attr('href');
+                $(id).toggle();
+                return false;
+            });
+        });
+    </script>
+}
+
+<div class="page-header">
+    <h3>@ViewBag.Title</h3>
+</div>
+
+<form action="@Url.Action("Create", "Responses", new {surveyId = Request["surveyId"]})" method="post">
+    <div class="well well-small">
+        <h4>Questions</h4>
+    </div>
+    <ul class="unstyled bordered skip-first">
+        @foreach (var question in Model.Questions)
+        {
+            <li class="row">
+                <div class="span9">
+                    <input type="hidden" name="Answers.Index" value="@question.Id" />
+                    <input type="hidden" name="Answers[@question.Id].QuestionId" value="@question.Id" />
+                    @Html.Raw(question.Body)
+                </div>
+                <div class="span3">
+
+                    @*deeh hya 2lly rabta ma3 views.survey.create.span3*@
+                   
+
+                    @if (question.Type == "Yes/No")
+                    {
+                        <select class="span3" name="Answers[@question.Id].Value">
+                            <option disabled selected>Select a value...</option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    }
+                    
+                    @*begin*@
+                    @if (question.Type == "multitext")
+                    {
+                        <textarea id="TextArea1" rows="2" cols="20"></textarea>
+                    }
+                    @if (question.Type == "singletext")
+                    {
+                        <input id="Text1" type="text" />
+                    }
+                    @if (question.Type == "singleselect")
+                    {
+                        <textarea id="TextArea1" rows="2" cols="20"></textarea>
+                    }
+                    @if (question.Type == "multiselect")
+                    {
+                        <textarea id="TextArea1" rows="2" cols="20"></textarea>
+                    }
+                    @if (question.Type == "date")
+                    {
+                        <input id="Text2" type="date" />  
+                    }
+                    @if (question.Type == "phone")
+                    {
+                        <input id="Text5" type="tel" />
+                    }
+                    @if (question.Type == "dropdown")
+                    {
+                        <textarea id="TextArea1" rows="2" cols="20"></textarea>
+                    }
+                    @if (question.Type == "time")
+                    {
+                        <input id="Text3" type="time" />
+                    }
+                    @if (question.Type == "image")
+                    {
+                        <input id="Text4" type="image" />
+                    }
+                    @*end*@
+    
+                    @if (question.Type == "Number")
+                    {
+                        <input class="span3" type="text" name="Answers[@question.Id].Value" placeholder="Enter a number..." />
+                    }
+                    
+                    <textarea id="@("comment" + question.Id)" class="span3 hide" name="Answers[@question.Id].Comment" placeholder="Comments..."></textarea>
+                    <a href="@("#comment" + @question.Id)" data-toggle="comment"><small>Show/Hide Comment</small></a>
+                </div>
+            </li>
+        }
+    </ul>
+    
+    <div class="form-actions">
+        <button class="btn btn-inverse pull-right" name="action" value="Next">
+            Save and Enter Another
+        </button>
+        <input class="btn btn-primary" type="submit" name="action" value="Save" />
+        <a class="btn" href="@Url.Action("Index", "Home")">Cancel</a>
+    </div>
+</form>

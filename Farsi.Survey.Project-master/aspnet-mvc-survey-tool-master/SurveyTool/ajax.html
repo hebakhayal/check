@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div> </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ <script>
+    ( function testAjax() {
+         $.ajax({
+             type: "GET",
+             contentTtpe: "application/json",
+             url: "/Surveys/GetAllServies",
+             /*url: "/api/rpc/Governorates/getall",   */
+             success: function (data) { debugger; console.log(data) }, error: function () { debugger; console.log("Error") }
+         })
+    })(); 
+     
+    </script>
+</body>
+</html>

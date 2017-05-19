@@ -1,0 +1,115 @@
+﻿@model IEnumerable<SurveyTool.Models.Survey>                      
+
+@{
+    ViewBag.Title = "Surveys";
+}
+  
+          
+@section scripts{
+    <script src="~/Scripts/jsfile.js"></script>
+
+    @*@System.Web.Optimization.Scripts.Render("~/bundles/bootstrap")*@
+
+    @*scripting link for sort-table*@
+    <script src="~/Scripts/sorttable.js"></script>
+
+    @System.Web.Optimization.Scripts.Render("~/bundles/models")
+    <script type="text/javascript">
+        //The first parameter says what view model object you want to use with the declarative bindings it activates
+        //Optionally, you can pass a second parameter to define which part of the document you want to search for
+        //data-bind attributes. For example, ko.applyBindings(myViewModel, document.getElementById('someElementId')).
+        //This restricts the activation to the element with ID someElementId and its descendants,
+        //which is useful if you want to have multiple view models and associate each with a different region of the page.
+
+        $(function () {
+            ko.applyBindings(new SurveyListModel(), $('#survey-list')[0]);
+        })
+
+    </script>
+}     
+
+<div class="page-header">
+    <a class="btn btn-success pull-right" href="@Url.Action("Create")">
+        <i class="icon-plus"></i> New Survey
+    </a>
+    <h2>Surveys <small>Add or manage surveys</small></h2>
+</div>                     
+                     
+<p>
+    @using (Html.BeginForm("Index", "Surveys", FormMethod.Get, new { @class = "form-horizontal" }))
+    {  
+        <b>Search By:</b>
+        <div class="container">
+            <label for="name" style="display: inline">Name</label>
+            <input type="radio" id="name" name="SearchBy" value="Name" onclick="Nameformate();">&nbsp;&nbsp;&nbsp;
+            <label for="date" style="display: inline">Date</label>
+            <input type="radio" id="date" name="SearchBy" value="Date" onclick="dateformate();">
+        </div>       
+        <br />
+    <div class="container row ">
+        <span>
+            <input type="text" name="search" id="search" style="width:88%" />
+            <i class="icon-search"></i>
+            <input type="submit" id="btn_search" value="search" class="btn btn-success " style="float:right;" />
+        </span>
+    </div>
+    }
+</p>
+
+<div class="container">
+    @if (Model.Count() == 0)
+    {
+        <table class="table table-hover table-striped"  >
+            <tr>
+              <th style="color:red;">NO survey found.....</th>  
+            </tr>
+        </table>
+    }
+</div>
+
+<table id="survey-list" class="sortable table table-striped">
+    <thead>
+        <tr>
+            <th class="span1">ID</th>
+            <th class="span2">Name</th>
+            <th class="span6">Date</th>
+            <th class="span2">Status</th>
+            <th class="span1">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.StartDate</td>
+                <td>@Html.DisplayFor(x => item.IsActive, "IsActive")</td>
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-wrench"></i><span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="@Url.Action("Edit", new {id = item.Id})">
+                                    <i class="icon-pencil"></i> Edit
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Delete", new {id = item.Id})" data-bind="click: destroy">
+                                    <i class="icon-trash"></i> Delete
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Responses", new { surveyId = item.Id })">
+                                    <i class="icon-list"></i> Responses
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
